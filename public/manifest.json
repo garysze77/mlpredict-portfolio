@@ -1,0 +1,11 @@
+{
+  "name": "MLPredict - 機器學習系統開發",
+  "short_name": "MLPredict",
+  "description": "生產級ML預測平台 | 數據驅動決策 | 訂造機器學習解決方案",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait-primary",
+  "lang": "zh-HK"
+}
