@@ -6,6 +6,7 @@ export type Project = {
   image: string;
   liveUrl: string;
   githubUrl: string;
+  metrics?: string;
 };
 
 export type Testimonial = {

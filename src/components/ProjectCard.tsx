@@ -15,43 +15,55 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const showImage = project.image && !isPlaceholder(project.image) && !imgError;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-lg hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-slate-600">
-      <div className="relative aspect-video w-full overflow-hidden bg-gradient-to-br from-primary-100/80 via-slate-100 to-primary-200/60 dark:from-slate-700 dark:via-slate-800 dark:to-slate-700">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/70 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl dark:border-slate-600/30 dark:bg-slate-800/70">
+      {/* Hero 圖 400x250 比例 */}
+      <div className="relative h-[250px] w-full shrink-0 overflow-hidden bg-slate-200 dark:bg-slate-700">
         {showImage ? (
           <Image
             src={project.image}
             alt={project.title}
             fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             onError={() => setImgError(true)}
           />
         ) : (
-          <span className="absolute inset-0 flex items-center justify-center rounded-xl bg-white/80 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm dark:bg-slate-800/80 dark:text-slate-300">
-            截圖占位 · {project.title}
-          </span>
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600">
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+              截圖占位 · {project.title}
+            </span>
+          </div>
         )}
       </div>
-      <div className="flex flex-1 flex-col p-6">
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-white">{project.title}</h3>
-        <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
+      <div className="flex flex-1 flex-col p-8">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+          {project.title}
+        </h3>
+        {project.metrics && (
+          <p className="mt-1 text-sm font-medium text-mlpredict-600 dark:text-mlpredict-400">
+            {project.metrics}
+          </p>
+        )}
+        <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+          {project.description}
+        </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          {project.tech.map((t) => (
+          {project.tech.slice(0, 4).map((t) => (
             <span
               key={t}
-              className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-300"
+              className="inline rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-600 dark:text-slate-200"
             >
               {t}
             </span>
           ))}
         </div>
-        <div className="mt-5 flex flex-wrap gap-3 text-sm">
+        <div className="mt-6 flex flex-wrap gap-4 text-sm">
           {showLive ? (
             <a
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-primary-600 hover:underline dark:text-primary-400"
+              className="font-semibold text-mlpredict-600 hover:underline dark:text-mlpredict-400"
             >
               Live Demo →
             </a>
@@ -63,7 +75,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-slate-600 hover:underline dark:text-slate-400"
+              className="font-semibold text-slate-600 hover:underline dark:text-slate-400"
             >
               GitHub
             </a>

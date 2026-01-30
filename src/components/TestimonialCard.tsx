@@ -27,15 +27,19 @@ function Stars({ count }: { count: number }) {
 
 export function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
-    <blockquote className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800/50">
+    <blockquote className="flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white/80 p-8 shadow-md backdrop-blur-sm dark:border-slate-600/30 dark:bg-slate-800/50">
       <Stars count={testimonial.rating} />
-      <p className="mt-4 text-lg text-slate-700 dark:text-slate-300">&ldquo;{testimonial.content}&rdquo;</p>
-      <footer className="mt-6 flex items-center gap-3">
-        <div className="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400 font-semibold">
+      <p className="mt-4 flex-1 text-xl italic leading-relaxed text-slate-700 dark:text-slate-300">
+        &ldquo;{testimonial.content}&rdquo;
+      </p>
+      <footer className="mt-6 flex items-center gap-4">
+        <div className="h-12 w-12 shrink-0 rounded-full bg-mlpredict-100 flex items-center justify-center text-mlpredict-600 font-bold dark:bg-mlpredict-900/50 dark:text-mlpredict-400">
           {testimonial.name.charAt(0)}
         </div>
         <div>
-          <cite className="not-italic font-semibold text-slate-900 dark:text-white">{testimonial.name}</cite>
+          <cite className="not-italic font-semibold text-slate-900 dark:text-white">
+            {testimonial.name}
+          </cite>
           <p className="text-sm text-slate-500 dark:text-slate-400">{testimonial.role}</p>
         </div>
       </footer>
