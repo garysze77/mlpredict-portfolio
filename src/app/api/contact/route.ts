@@ -21,7 +21,24 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { name, email, message } = body;
+    const { name, email, message, website_url: honeypot, turnstileToken } = body;
+
+    if (honeypot && String(honeypot).trim()) {
+      return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+    }
+
+    const secretKey = process.env.TURNSTILE_SECRET_KEY;
+    if (secretKey && turnstileToken && typeof turnstileToken === 'string') {
+      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ secret: secretKey, response: turnstileToken }).toString(),
+      });
+      const verifyData = await verifyRes.json().catch(() => ({}));
+      if (!verifyData?.success) {
+        return NextResponse.json({ error: '驗證失敗，請再試一次' }, { status: 400 });
+      }
+    }
 
     if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 });

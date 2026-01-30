@@ -9,6 +9,21 @@
 - **Tailwind CSS**
 - 暗黑模式切換、響應式、SEO、PWA ready、Vercel 部署
 
+## 環境變數（Resend 發信與訂閱名單）
+
+聯絡表單與訂閱功能經 [Resend](https://resend.com) 發信，需設定以下環境變數：
+
+1. **複製範例檔**：`cp .env.example .env`
+2. **填寫 `.env`**：
+   - **`RESEND_API_KEY`**（必填）：到 [Resend Dashboard](https://resend.com/api-keys) 建立 API Key，權限需包含 **Contacts**（訂閱名單）與發信。
+   - **`RESEND_AUDIENCE_ID`**（訂閱功能必填）：到 Resend → **Audiences** → 建立或選取一個 Audience → 複製其 **Audience ID**（UUID 格式）。
+   - **`EMAIL_FROM`**：發信顯示（如 `MLPredict <onboarding@yourdomain.com>`），網域須在 Resend **Domains** 驗證並加好 DNS。
+   - **`CONTACT_TO`**：聯絡表單與新訂閱通知的收件信箱。
+
+未設定時，聯絡/訂閱 API 會回 503；發信網域未驗證時 Resend 可能回 403/500，請在 Resend 完成 Domain 與 DNS 設定。
+
+**聯絡表單防機械人**：內建 **honeypot**（隱藏欄位），無需設定即生效。可選加 **Cloudflare Turnstile**：在 `.env` 設 `NEXT_PUBLIC_TURNSTILE_SITE_KEY` 與 `TURNSTILE_SECRET_KEY`（於 [Cloudflare Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) 建立 Widget 取得），表單會顯示驗證框並於 API 驗證 token。
+
 ## 開發
 
 在專案目錄**本機終端機**執行：
@@ -16,6 +31,7 @@
 ```bash
 cd /var/www/MLPredict   # 或你的專案路徑
 npm install             # 若未安裝過
+cp .env.example .env    # 再依上方填寫 .env
 npm run dev
 ```
 
@@ -26,8 +42,9 @@ npm run dev
 1. **本地預覽**：`npm run dev` → 打開 http://localhost:3001 檢查 Hero、項目卡、見證輪播、Footer、暗黑模式、手機版。
 2. **Production 建置**：`npm run build` → `npm start`，確認無錯誤。
 3. **部署 Vercel**：連到 Git 或 `vercel` CLI，在 Vercel 專案設定網域 **mlpredict.app**。
-4. **內容更新**：在 `src/components/Projects.tsx` 把各項目的 `liveUrl`、`githubUrl` 改成真實連結；可於 `public/images/` 放專案截圖並在 `ProjectCard` 改用 `next/image`。
-5. **PWA 圖示**（可選）：在 `public/` 加入 `icon-192.png`、`icon-512.png`，並在 `public/manifest.json` 補回 `icons` 陣列。
+4. **Hero 背景圖**（可選）：在 `public/` 放 **`hero-banner.webp`**（建議 1920×1080；WebP 較輕量），首頁 Hero 會自動用作背景；沒有檔案時會用漸層。可用：儀表板截圖、數據可視化、抽象科技圖等，文字上會有深色遮罩保持可讀。
+5. **內容更新**：在 `src/components/Projects.tsx` 把各項目的 `liveUrl`、`githubUrl` 改成真實連結；可於 `public/images/` 放專案截圖並在 `ProjectCard` 改用 `next/image`。
+6. **PWA 圖示**（可選）：在 `public/` 加入 `icon-192.png`、`icon-512.png`，並在 `public/manifest.json` 補回 `icons` 陣列。
 
 ### 若出現 `cannot access 'node_modules': No such file or directory`
 
@@ -52,6 +69,7 @@ npm start
 1. 將專案連到 Vercel（Git 或 `vercel` CLI）。
 2. 網域設為 `mlpredict.app`（在 Vercel 專案設定中加入網域）。
 3. 建置指令：`npm run build`（預設已於 `vercel.json` 設定）。
+4. **環境變數**：在 Vercel 專案 **Settings → Environment Variables** 加入 `RESEND_API_KEY`、`RESEND_AUDIENCE_ID`、`EMAIL_FROM`、`CONTACT_TO`（勿把 `.env` 推上 Git）。
 
 `vercel.json` 已設定 `regions: ["hkg1"]`，可選香港節點。
 
@@ -64,9 +82,13 @@ npm start
 ## 專案結構
 
 - `src/app/` - 頁面與 layout、SEO meta
-- `src/components/` - Hero、Projects、Testimonials、Footer、Header、ThemeProvider
+- `src/app/about/` - 關於我們頁
+- `src/app/api/contact/`、`src/app/api/subscribe/` - Resend 聯絡與訂閱 API
+- `src/app/sitemap.ts`、`src/app/robots.ts` - 自動生成 sitemap.xml、robots.txt
+- `src/components/` - Hero、Stats、Projects、Testimonials、ContactForm、ContactSection、Footer、Header、ThemeProvider
 - `src/types/` - TypeScript 型別
-- `public/manifest.json` - PWA manifest
+- `.env.example` - 環境變數範例（複製為 `.env` 並填寫，勿提交 `.env`）
+- `public/hero-banner.webp` - Hero 背景圖；`public/manifest.json` - PWA manifest
 
 ## SEO 關鍵字
 

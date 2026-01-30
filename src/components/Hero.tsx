@@ -1,9 +1,32 @@
+'use client';
+
 import Link from 'next/link';
+import Image from 'next/image';
+
+/** Hero 背景圖：public/hero-banner.webp（1920×1080，輕量）；沒有檔案時會自動退為漸層背景 */
+const HERO_IMAGE = '/hero-banner.webp';
 
 export function Hero() {
   return (
     <section className="relative flex min-h-[100dvh] flex-col justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 px-4 py-20 sm:px-6 sm:py-28">
-      <div className="mx-auto w-full max-w-4xl text-center">
+      {/* 背景圖（若有）：用 next/image 優化，深色遮罩保文字可讀 */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={HERO_IMAGE}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority
+          unoptimized={false}
+          onError={(e) => {
+            const target = e.currentTarget;
+            target.style.display = 'none';
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/85 via-slate-900/75 to-slate-900/90" aria-hidden />
+      </div>
+      <div className="relative z-10 mx-auto w-full max-w-4xl text-center">
         <h1
           className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl"
           style={{ textShadow: '0 2px 20px rgba(0,0,0,0.3)' }}

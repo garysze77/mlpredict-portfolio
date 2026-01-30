@@ -26,11 +26,13 @@ export const metadata: Metadata = {
     url: 'https://mlpredict.app',
     siteName: 'MLPredict',
     locale: 'zh_HK',
+    images: [{ url: '/hero-banner.webp', width: 1920, height: 1080, alt: 'MLPredict' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MLPredict - 機器學習系統開發',
     description: '生產級ML預測平台 | 數據驅動決策',
+    images: ['/hero-banner.webp'],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: 'https://mlpredict.app' },
