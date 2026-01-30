@@ -8,47 +8,41 @@ const CONTACT_WHATSAPP = '85291574876';
 const ADDRESS_LINE = '總部：香港';
 
 export function Footer() {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [subscribeEmail, setSubscribeEmail] = useState('');
+  const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [subscribeMessage, setSubscribeMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  async function handleSubscribe(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
-    setStatus('success');
-    setEmail('');
-  };
+    const email = subscribeEmail.trim();
+    if (!email) return;
+    setSubscribeStatus('loading');
+    setSubscribeMessage('');
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setSubscribeStatus('success');
+        setSubscribeEmail('');
+        setSubscribeMessage('已加入訂閱，多謝！');
+      } else {
+        setSubscribeStatus('error');
+        setSubscribeMessage(data?.error || '訂閱失敗，請稍後再試');
+      }
+    } catch {
+      setSubscribeStatus('error');
+      setSubscribeMessage('網路錯誤，請稍後再試');
+    }
+  }
 
   return (
-    <footer id="contact" className="scroll-mt-20 border-t border-slate-200 bg-slate-50 px-4 py-20 dark:border-slate-800 dark:bg-slate-900 sm:px-6">
+    <footer className="scroll-mt-20 border-t border-slate-200 bg-slate-50 px-4 py-20 dark:border-slate-800 dark:bg-slate-900 sm:px-6">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-12 md:grid-cols-3">
-          <div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">訂閱最新動態</h3>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              輸入電郵，接收 MLPredict 項目更新與 ML 開發資訊。
-            </p>
-            <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-2 sm:flex-row">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="請輸入電郵地址"
-                className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white dark:placeholder-slate-400"
-                required
-                aria-label="電郵地址"
-              />
-              <button
-                type="submit"
-                className="rounded-xl bg-primary-600 px-5 py-3 font-medium text-white transition hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
-              >
-                訂閱
-              </button>
-            </form>
-            {status === 'success' && (
-              <p className="mt-2 text-sm text-green-600 dark:text-green-400">感謝訂閱！</p>
-            )}
-          </div>
-
+        <div className="grid gap-12 md:grid-cols-2">
           <div>
             <h3 className="text-lg font-semibold text-slate-900 dark:text-white">聯絡我們</h3>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
@@ -84,10 +78,34 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">MLPredict</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              生產級機器學習系統開發，香港 ML 開發、賽馬預測、股票信號與訂造解決方案。
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">訂閱最新動態</h3>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              輸入電郵，接收項目更新與產品資訊。
             </p>
+            <form onSubmit={handleSubscribe} className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+              <input
+                type="email"
+                value={subscribeEmail}
+                onChange={(e) => setSubscribeEmail(e.target.value)}
+                placeholder="your@email.com"
+                required
+                disabled={subscribeStatus === 'loading'}
+                className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-400"
+              />
+              <button
+                type="submit"
+                disabled={subscribeStatus === 'loading'}
+                className="shrink-0 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-700 disabled:opacity-60"
+              >
+                {subscribeStatus === 'loading' ? '提交中…' : '訂閱'}
+              </button>
+            </form>
+            {subscribeStatus === 'success' && (
+              <p className="mt-2 text-sm text-green-600 dark:text-green-400">{subscribeMessage}</p>
+            )}
+            {subscribeStatus === 'error' && (
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400">{subscribeMessage}</p>
+            )}
           </div>
         </div>
 

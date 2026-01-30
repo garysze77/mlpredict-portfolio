@@ -15,7 +15,10 @@ export const metadata: Metadata = {
   keywords: ['香港ML開發', '賽馬預測', '股票信號', '機器學習', 'ML預測平台', 'XGBoost', 'Finnhub'],
   manifest: '/manifest.json',
   icons: {
-    icon: '/favicon.svg',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.svg', sizes: 'any' },
+    ],
   },
   openGraph: {
     title: 'MLPredict - 機器學習系統開發',
