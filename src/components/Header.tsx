@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useTheme } from '@/components/ThemeProvider';
 import { useState } from 'react';
+import { Logo } from '@/components/Logo';
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -11,9 +12,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link href="/" className="text-xl font-bold text-slate-900 dark:text-white">
-          MLPredict
-        </Link>
+        <Logo />
 
         <div className="flex items-center gap-4">
           <button

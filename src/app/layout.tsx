@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     '生產級ML預測平台，數據驅動決策。香港機器學習開發：賽馬預測、美股買賣通知、商會管理、營利預測。訂造機器學習解決方案。',
   keywords: ['香港ML開發', '賽馬預測', '股票信號', '機器學習', 'ML預測平台', 'XGBoost', 'Finnhub'],
   manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.svg',
+  },
   openGraph: {
     title: 'MLPredict - 機器學習系統開發',
     description: '生產級ML預測平台 | 數據驅動決策 | 訂造機器學習解決方案',
